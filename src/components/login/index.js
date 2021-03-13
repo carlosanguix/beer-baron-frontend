@@ -7,8 +7,6 @@ function Login() {
             <textArea />
         </>
     );
-    
 }
-
 
 export default Login;
