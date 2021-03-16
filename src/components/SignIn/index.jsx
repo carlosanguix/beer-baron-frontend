@@ -43,7 +43,7 @@ const SignIn = ({ signIn }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (email && setEmail) {
+    if (email && password) {
       signIn(email, password);
     } else {
       // handle errors
