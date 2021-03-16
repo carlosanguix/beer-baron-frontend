@@ -1,7 +1,36 @@
+import {
+  SET_USER_LOADING,
+  SET_USER_LOGGED,
+  SET_USER_DATA,
+} from './actionTypes';
 import API from '../api';
 
-export default (nameOrEmail, password) => async () => {
-  console.log(nameOrEmail, password);
-  await API.signIn({ nameOrEmail, password });
-  // const res = fetch()
+const setUserLoading = (isLoading) => ({
+  type: SET_USER_LOADING,
+  isLoading,
+});
+
+const setLogged = (logged) => ({
+  type: SET_USER_LOGGED,
+  logged,
+});
+
+const setUser = (user) => ({
+  type: SET_USER_DATA,
+  user,
+});
+
+export const signIn = (nameOrEmail, password) => async (dispatch) => {
+  dispatch(setUserLoading(true));
+  const response = await API.signIn({ nameOrEmail, password });
+  dispatch(setLogged(response.success));
+  dispatch(setUserLoading(false));
+};
+
+export const whoAmI = () => async (dispatch) => {
+  const response = await API.whoAmI();
+  if (response.auth) {
+    dispatch(setUser(response.user));
+    dispatch(setLogged(true));
+  }
 };

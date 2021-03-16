@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
-import signInAction from '../../actions/userActions';
+import { signIn as signInAction } from '../../actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

@@ -1,17 +1,38 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter, Switch, Route, Redirect,
+} from 'react-router-dom';
+import { connect } from 'react-redux';
 import SignIn from './components/SignIn';
+import Home from './components/Home';
+import { whoAmI as whoAmIAction } from './actions/userActions';
+import { readIsLoggedIn } from './reducers/userReducer';
 
-function App() {
+function App({ whoAmI, isLoggedIn }) {
+  useEffect(() => {
+    whoAmI();
+  }, []);
+
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/*" exact>
-          <SignIn />
+        <Route path="/signin" exact>
+          {!isLoggedIn ? <SignIn /> : <Redirect to="/" />}
+        </Route>
+        <Route path="/" exact>
+          <Home />
         </Route>
       </Switch>
     </BrowserRouter>
   );
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  whoAmI: () => dispatch(whoAmIAction()),
+});
+
+const mapStateToProps = (state) => ({
+  isLoggedIn: readIsLoggedIn(state),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

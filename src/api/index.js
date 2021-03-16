@@ -12,9 +12,15 @@ function createRequest(url, method, payload) {
 
 async function signIn(payload) {
   const res = await fetch(createRequest(`${BASE_URL}/auth/signIn`, 'POST', payload));
-  console.log(await res.json());
+  return res.json();
+}
+
+async function whoAmI() {
+  const res = await fetch(`${BASE_URL}/auth/whoAmI`);
+  return res.json();
 }
 
 export default {
   signIn,
+  whoAmI,
 };
