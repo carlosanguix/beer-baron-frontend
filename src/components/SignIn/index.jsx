@@ -65,7 +65,6 @@ const SignIn = ({ signIn }) => {
             margin="normal"
             required
             fullWidth
-            id="email"
             label="Username or Email"
             name="email"
             autoComplete="email"
@@ -80,7 +79,6 @@ const SignIn = ({ signIn }) => {
             name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
           />
           <FormControlLabel
