@@ -15,25 +15,25 @@ import { signIn } from '../../actions/userActions';
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    avatar: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
-  
+
 const SignIn = ({ signIn }) => {
   const classes = useStyles();
 
@@ -43,7 +43,13 @@ const SignIn = ({ signIn }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    signIn(email, password);
+    if (email && setEmail) {
+      signIn(email, password);
+    }
+    else {
+      // handle errors
+    }
+
   }
 
   return (
@@ -57,7 +63,7 @@ const SignIn = ({ signIn }) => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
-            onChange={({target}) => setEmail(target.value)}
+            onChange={({ target }) => setEmail(target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -69,7 +75,7 @@ const SignIn = ({ signIn }) => {
             autoFocus
           />
           <TextField
-            onChange={({target}) => setPassword(target.value)}
+            onChange={({ target }) => setPassword(target.value)}
             variant="outlined"
             margin="normal"
             required

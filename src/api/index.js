@@ -1,13 +1,12 @@
-const BASE_URL = 'http://localhost:3000/api/v1';
+const BASE_URL = process.env.API_BASE_URL || '/api/v1';
 
 function createRequest(url, method, payload) {
     return new Request(url, {
         body: JSON.stringify(payload),
         method,
         headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
+            'Content-Type': 'application/json',
+        }
     });
 }
 
