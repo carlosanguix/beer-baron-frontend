@@ -3,7 +3,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import SignIn from './components/SignIn';
 
 function App() {
-
   return (
     <BrowserRouter>
       <Switch>
