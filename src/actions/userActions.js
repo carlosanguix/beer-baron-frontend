@@ -2,8 +2,11 @@ import {
   SET_USER_LOADING,
   SET_USER_LOGGED,
   SET_USER_DATA,
-  ADD_NOTIFICATION,
 } from './actionTypes';
+import {
+  addErrorNotification,
+  addSuccessNotification,
+} from './notifierActions';
 import API from '../api';
 
 const setUserLoading = (isLoading) => ({
@@ -24,15 +27,15 @@ const setUser = (user) => ({
 export const signIn = (nameOrEmail, password) => async (dispatch) => {
   dispatch(setUserLoading(true));
   const response = await API.signIn({ nameOrEmail, password });
+
   dispatch(setLogged(response.success));
   dispatch(setUserLoading(false));
-  dispatch({
-    type: ADD_NOTIFICATION,
-    notification: {
-      variant: response.success ? 'success' : 'error',
-      msg: response.success ? 'You have been logged in' : response.msg,
-    },
-  });
+
+  if (response.success) {
+    dispatch(addSuccessNotification('You have been logged in.'));
+  } else {
+    dispatch(addErrorNotification(response.msg));
+  }
 };
 
 export const whoAmI = () => async (dispatch) => {
