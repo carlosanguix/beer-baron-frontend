@@ -5,6 +5,7 @@ import {
 import { connect } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 import Home from './components/Home';
 import { whoAmI as whoAmIAction } from './actions/userActions';
 import { readIsLoggedIn } from './reducers/userReducer';
@@ -22,6 +23,9 @@ function App({ whoAmI, isLoggedIn }) {
         <Switch>
           <Route path="/signin" exact>
             {!isLoggedIn ? <SignIn /> : <Redirect to="/" />}
+          </Route>
+          <Route path="/signup" exact>
+            {!isLoggedIn ? <SignUp /> : <Redirect to="/" />}
           </Route>
           <Route path="/" exact>
             <Home />

@@ -38,6 +38,10 @@ export const signIn = (nameOrEmail, password) => async (dispatch) => {
   }
 };
 
+export const signUp = () => () => {
+  console.log('frgretgre');
+};
+
 export const whoAmI = () => async (dispatch) => {
   const response = await API.whoAmI();
   if (response.auth) {
