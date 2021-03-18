@@ -29,5 +29,6 @@ const reducer = (state = initialState, action) => {
 
 export const readUser = (state) => ({ ...state.userReducer });
 export const readIsLoggedIn = (state) => state.userReducer.isLogged;
+export const readIsLoading = (state) => state.userReducer.readIsLoading;
 
 export default reducer;

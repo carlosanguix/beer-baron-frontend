@@ -9,11 +9,13 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import { CircularProgress } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { signIn as signInAction } from '../../actions/userActions';
+import { readIsLoading } from '../../reducers/userReducer';
 import './signin.css';
 
-const SignIn = ({ signIn }) => {
+const SignIn = ({ signIn, isLoading }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -63,15 +65,19 @@ const SignIn = ({ signIn }) => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className="submit1"
-            >
-              Sign In
-            </Button>
+            <div className="wrapButtonLoading">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className="submit1"
+                disabled={isLoading}
+              >
+                Sign Up
+              </Button>
+              {isLoading ? <CircularProgress className="buttonProgress" size={24} /> : null}
+            </div>
             <Grid container>
               <Grid item xs>
                 <Link href="#random" variant="body2">
@@ -96,4 +102,8 @@ const mapDispatchToProps = (dispatch) => ({
   signIn: (name, password) => dispatch(signInAction(name, password)),
 });
 
-export default connect(null, mapDispatchToProps)(SignIn);
+const mapStateToProps = (state) => ({
+  isLoading: readIsLoading(state),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

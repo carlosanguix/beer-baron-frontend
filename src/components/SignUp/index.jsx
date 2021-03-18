@@ -7,15 +7,17 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import { CircularProgress } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { signUp as signUpAction } from '../../actions/userActions';
+import { readIsLoading } from '../../reducers/userReducer';
 import './signUp.css';
 
 const NO_VALID_EMAIL_ERROR = 'invalid email';
 const NOT_SAME_PASSWORD_ERROR = 'passwords do not match';
 const MUST_CONTAIN_MESSAGE = 'password must contain minimum eight characters, at least one letter and one number';
 
-const SignUp = ({ signUp }) => {
+const SignUp = ({ signUp, isLoading }) => {
   const [username, setUsername] = useState('');
   const [usernameError, setUserNameError] = useState('');
   const [email, setEmail] = useState('');
@@ -31,8 +33,10 @@ const SignUp = ({ signUp }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username && !email && !password && !repeatPassword) {
+    if (!username || !email || !password || !repeatPassword) {
       // handle empty fields errors
+
+      return;
     }
 
     const res = await signUp(username, email, password, repeatPassword);
@@ -132,17 +136,20 @@ const SignUp = ({ signUp }) => {
                   autoComplete="current-password"
                 />
               </Grid>
-
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className="submit1"
-            >
-              Sign Up
-            </Button>
+            <div className="wrapButtonLoading">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className="submit1"
+                disabled={isLoading}
+              >
+                Sign Up
+              </Button>
+              {isLoading ? <CircularProgress className="buttonProgress" size={24} /> : null}
+            </div>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">
@@ -163,4 +170,8 @@ const mapDispatchToProps = (dispatch) => ({
   ),
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+const mapStateToProps = (state) => ({
+  isLoading: readIsLoading(state),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

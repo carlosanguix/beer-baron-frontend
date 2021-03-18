@@ -41,6 +41,8 @@ export const signIn = (nameOrEmail, password) => async (dispatch) => {
   } catch (e) {
     dispatch(addErrorNotification(e.message));
   }
+
+  dispatch(setUserLoading(false));
 };
 
 export const signUp = (username, email, password, repeatPassword) => async (dispatch) => {
@@ -61,7 +63,7 @@ export const signUp = (username, email, password, repeatPassword) => async (disp
     dispatch(addErrorNotification(e.message));
   }
 
-  dispatch(setUserLoading(true));
+  dispatch(setUserLoading(false));
   return res;
 };
 
