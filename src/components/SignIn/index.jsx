@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import { signIn as signInAction } from '../../actions/userActions';
-import '../generalStyles.css';
 import './signin.css';
 
 const SignIn = ({ signIn }) => {

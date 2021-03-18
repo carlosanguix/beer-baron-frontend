@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -8,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import { signUp as signUpAction } from '../../actions/userActions';
-import '../generalStyles.css';
 import './signUp.css';
 
 const NO_VALID_EMAIL_ERROR = 'invalid email';
@@ -17,32 +17,41 @@ const MUST_CONTAIN_MESSAGE = 'password must contain minimum eight characters, at
 
 const SignUp = ({ signUp }) => {
   const [username, setUsername] = useState('');
+  const [usernameError, setUserNameError] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(NO_VALID_EMAIL_ERROR);
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [isValidEmail, setIsValidEmail] = useState(false);
-  const [isValidPassword, setIsValidPassword] = useState(false);
-  const [isSamePassword, setIsSamePassword] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isSamePassword, setIsSamePassword] = useState(true);
 
-  const handleSubmit = (e) => {
+  const history = useHistory();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (username && email && password && repeatPassword) {
-      signUp(username, email, password, repeatPassword);
-    } else {
-      // handle errors
+    if (!username && !email && !password && !repeatPassword) {
+      // handle empty fields errors
     }
+
+    const res = await signUp(username, email, password, repeatPassword);
+    if (res.success) history.push('/signin');
+
+    setUserNameError(res.usernameAlreadyRegistered ? res.msg : '');
+    setEmailError(res.emailAlreadyRegistered ? res.msg : '');
+    setIsValidEmail(!res.emailAlreadyRegistered);
   };
 
   // https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
   const validatePassword = (passwordToValidate) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return !regex.test(passwordToValidate);
+    return regex.test(passwordToValidate);
   };
 
   const validateEmail = (emailToValidate) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return !re.test(emailToValidate);
+    return re.test(emailToValidate);
   };
 
   const handleOnchangeEmail = (e) => {
@@ -57,7 +66,7 @@ const SignUp = ({ signUp }) => {
 
   const handleOnChangeRepeatPassword = (e) => {
     setRepeatPassword(e.target.value);
-    setIsSamePassword(password !== e.target.value);
+    setIsSamePassword(password === e.target.value);
   };
 
   return (
@@ -73,6 +82,8 @@ const SignUp = ({ signUp }) => {
               <Grid item xs={12}>
                 <TextField
                   onChange={(e) => setUsername(e.target.value)}
+                  error={Boolean(usernameError)}
+                  helperText={usernameError}
                   autoComplete="username"
                   variant="outlined"
                   required
@@ -86,8 +97,8 @@ const SignUp = ({ signUp }) => {
                   variant="outlined"
                   required
                   fullWidth
-                  error={isValidEmail}
-                  helperText={isValidEmail ? NO_VALID_EMAIL_ERROR : ''}
+                  error={!isValidEmail}
+                  helperText={!isValidEmail ? emailError : ''}
                   label="Email Address"
                   autoComplete="email"
                 />
@@ -98,8 +109,8 @@ const SignUp = ({ signUp }) => {
                   variant="outlined"
                   required
                   fullWidth
-                  error={isValidPassword}
-                  helperText={isValidPassword ? MUST_CONTAIN_MESSAGE : ''}
+                  error={!isValidPassword}
+                  helperText={!isValidPassword ? MUST_CONTAIN_MESSAGE : ''}
                   name="password"
                   label="Password"
                   type="password"
@@ -112,8 +123,8 @@ const SignUp = ({ signUp }) => {
                   variant="outlined"
                   required
                   fullWidth
-                  error={isSamePassword}
-                  helperText={isSamePassword ? NOT_SAME_PASSWORD_ERROR : ''}
+                  error={!isSamePassword}
+                  helperText={!isSamePassword ? NOT_SAME_PASSWORD_ERROR : ''}
                   name="repeatPassword"
                   label="Repeat password"
                   type="password"

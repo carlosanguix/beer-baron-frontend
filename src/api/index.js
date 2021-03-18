@@ -20,7 +20,13 @@ async function whoAmI() {
   return res.json();
 }
 
+async function signUp(payload) {
+  const res = await fetch(createRequest(`${BASE_URL}/auth/signup`, 'POST', payload));
+  return res.json();
+}
+
 export default {
   signIn,
   whoAmI,
+  signUp,
 };

@@ -26,20 +26,43 @@ const setUser = (user) => ({
 
 export const signIn = (nameOrEmail, password) => async (dispatch) => {
   dispatch(setUserLoading(true));
-  const response = await API.signIn({ nameOrEmail, password });
 
-  dispatch(setLogged(response.success));
-  dispatch(setUserLoading(false));
+  try {
+    const response = await API.signIn({ nameOrEmail, password });
 
-  if (response.success) {
-    dispatch(addSuccessNotification('You have been logged in.'));
-  } else {
-    dispatch(addErrorNotification(response.msg));
+    dispatch(setLogged(response.success));
+    dispatch(setUserLoading(false));
+
+    if (response.success) {
+      dispatch(addSuccessNotification('You have been logged in.'));
+    } else {
+      dispatch(addErrorNotification(response.msg));
+    }
+  } catch (e) {
+    dispatch(addErrorNotification(e.message));
   }
 };
 
-export const signUp = () => () => {
-  console.log('frgretgre');
+export const signUp = (username, email, password, repeatPassword) => async (dispatch) => {
+  dispatch(setUserLoading(true));
+  let res;
+
+  try {
+    res = await API.signUp({
+      username, email, password, repeatPassword,
+    });
+
+    if (res.success) {
+      dispatch(addSuccessNotification('You have been registered.'));
+    } else {
+      dispatch(addErrorNotification(res.msg));
+    }
+  } catch (e) {
+    dispatch(addErrorNotification(e.message));
+  }
+
+  dispatch(setUserLoading(true));
+  return res;
 };
 
 export const whoAmI = () => async (dispatch) => {
