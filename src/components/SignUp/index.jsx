@@ -11,8 +11,9 @@ import { signUp as signUpAction } from '../../actions/userActions';
 import '../generalStyles.css';
 import './signUp.css';
 
-const NO_VALID_EMAIL_ERROR = 'no valid email';
-const NOT_SAME_PASSWORD_ERROR = 'not same passwords';
+const NO_VALID_EMAIL_ERROR = 'invalid email';
+const NOT_SAME_PASSWORD_ERROR = 'passwords do not match';
+const MUST_CONTAIN_MESSAGE = 'password must contain minimum eight characters, at least one letter and one number';
 
 const SignUp = ({ signUp }) => {
   const [username, setUsername] = useState('');
@@ -20,6 +21,7 @@ const SignUp = ({ signUp }) => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const [isValidPassword, setIsValidPassword] = useState(false);
   const [isSamePassword, setIsSamePassword] = useState(false);
 
   const handleSubmit = (e) => {
@@ -32,6 +34,12 @@ const SignUp = ({ signUp }) => {
     }
   };
 
+  // https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+  const validatePassword = (passwordToValidate) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return !regex.test(passwordToValidate);
+  };
+
   const validateEmail = (emailToValidate) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return !re.test(emailToValidate);
@@ -40,6 +48,11 @@ const SignUp = ({ signUp }) => {
   const handleOnchangeEmail = (e) => {
     setEmail(e.target.value);
     setIsValidEmail(validateEmail(e.target.value));
+  };
+
+  const handleOnChangePassword = (e) => {
+    setPassword(e.target.value);
+    setIsValidPassword(validatePassword(e.target.value));
   };
 
   const handleOnChangeRepeatPassword = (e) => {
@@ -81,10 +94,12 @@ const SignUp = ({ signUp }) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handleOnChangePassword}
                   variant="outlined"
                   required
                   fullWidth
+                  error={isValidPassword}
+                  helperText={isValidPassword ? MUST_CONTAIN_MESSAGE : ''}
                   name="password"
                   label="Password"
                   type="password"
